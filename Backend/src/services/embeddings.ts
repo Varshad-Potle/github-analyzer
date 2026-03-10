@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import env from '../config/env';
 import type { CodeChunk, VectorRecord } from '../types';
-import { makeVectorId, repoUrlToNamespace } from '../utils/helpers';
+import { makeVectorId } from '../utils/helpers';
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel(
@@ -9,43 +9,31 @@ const model = genAI.getGenerativeModel(
     { apiVersion: 'v1beta' }
 );
 
-// Gemini embedding API allows max 100 texts per batch request
-const BATCH_SIZE = 100;
+const DELAY_MS = 100;
 
-// ─── Embed a single query string (used at query time) ─────────────────────────
 export async function embedQuery(text: string): Promise<number[]> {
     const result = await model.embedContent(text);
     return result.embedding.values;
 }
 
-// ─── Embed chunks in batches and return VectorRecords ─────────────────────────
 export async function embedChunks(chunks: CodeChunk[]): Promise<VectorRecord[]> {
     const vectors: VectorRecord[] = [];
+    const total = chunks.length;
 
-    for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
-        const batch = chunks.slice(i, i + BATCH_SIZE);
-        const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
-        const totalBatches = Math.ceil(chunks.length / BATCH_SIZE);
+    for (let i = 0; i < total; i++) {
+        if (i % 50 === 0) {
+            console.log(`[embeddings] progress: ${i}/${total}`);
+        }
 
-        console.log(`[embeddings] batch ${batchNumber}/${totalBatches} (${batch.length} chunks)`);
+        const result = await model.embedContent(chunks[i].text);
 
-        // Embed all chunks in the batch concurrently
-        const embedResults = await Promise.all(
-            batch.map(chunk => model.embedContent(chunk.text))
-        );
-
-        batch.forEach((chunk, idx) => {
-            vectors.push({
-                id: makeVectorId(chunk.repoUrl, chunk.filePath, chunk.chunkIndex),
-                values: embedResults[idx].embedding.values,
-                metadata: chunk,
-            });
+        vectors.push({
+            id: makeVectorId(chunks[i].repoUrl, chunks[i].filePath, chunks[i].chunkIndex),
+            values: result.embedding.values,
+            metadata: chunks[i],
         });
 
-        // Small delay between batches to avoid hitting rate limits
-        if (i + BATCH_SIZE < chunks.length) {
-            await sleep(500);
-        }
+        await sleep(DELAY_MS);
     }
 
     console.log(`[embeddings] generated ${vectors.length} vectors`);
