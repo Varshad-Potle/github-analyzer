@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { errorHandler } from './middleware/errorHandler';
 import reposRouter from './routes/repos';
+import chatRouter from './routes/chat';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 app.use('/api/repos', reposRouter);
+
+app.use('/api/chat', chatRouter);
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
 app.use(errorHandler);
