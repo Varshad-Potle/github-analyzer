@@ -29,7 +29,7 @@ router.get('/', async (req: Request, res: Response) => {
         return;
     }
 
-    const tree = getFileTree(repoUrl);
+    const tree = await getFileTree(repoUrl);
 
     if (!tree) {
         res.status(404).json({ error: 'File tree not found. Please re-index this repository.' });
