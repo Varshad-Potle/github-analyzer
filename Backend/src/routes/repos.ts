@@ -3,8 +3,18 @@ import { z } from 'zod';
 import { ingestRepo, getFileTree } from '../services/ingestion';
 import { namespaceExists, deleteNamespace } from '../services/vectorStore';
 import { isValidGithubUrl, repoUrlToNamespace, normalizeRepoUrl } from '../utils/helpers';
+import { getAllRepos } from '../services/database';
 
 const router = Router();
+
+router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+        const repos = await getAllRepos();
+        res.json({ repos });
+    } catch (err) {
+        next(err);
+    }
+});
 
 // ─── POST /api/repos/index ────────────────────────────────────────────────────
 
