@@ -75,6 +75,7 @@ PINECONE_INDEX_NAME=github-analyzer
 GITHUB_TOKEN=your_github_token
 GEMINI_MODEL=gemini-2.0-flash
 PORT=3000
+MONGODB_URI=your_mongodb_connection_string
 ```
 
 ## 📚 API Reference
@@ -82,6 +83,9 @@ PORT=3000
 ### 📥 POST /api/repos/index
 Ingests and indexes a public GitHub repository into the vector database.
 - **Body**: `{ "repoUrl": "https://github.com/user/repo" }`
+
+### 📋 GET /api/repos
+Retrieves a list of previously indexed repositories from MongoDB Atlas.
 
 ### 💬 POST /api/chat/query
 Queries the indexed repository codebase based on a user's question using RAG.
