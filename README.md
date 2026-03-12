@@ -10,7 +10,7 @@ GitHub Code Analyzer is a robust backend service designed to index public GitHub
 - **Runtime & Framework**: Node.js, Express
 - **Language**: TypeScript
 - **AI & Processing**: Google Gemini AI (Embeddings & LLM), LangChain Text Splitters
-- **Database**: Pinecone (Vector Database)
+- **Database**: MongoDB Atlas (Primary Database), Pinecone (Vector Database)
 - **Utilities**: simple-git, zod (Validation), pino (Logging)
 - **Testing**: Vitest
 
@@ -36,11 +36,11 @@ GitHub Code Analyzer is a robust backend service designed to index public GitHub
 +--------------------------------------------------------------------------------+
 |                        🤖 AI & External Systems                                |
 |                                                                                |
-|    [✨ Google Gemini 2.0]        [🌲 Pinecone DB]           [🐙 GitHub API]    |
+| [✨ Gemini 2.0]     [🌲 Pinecone DB]     [🍃 MongoDB Atlas]    [🐙 GitHub API] |
 +--------------------------------------------------------------------------------+
 ```
 
-1. **Repository Ingestion (`/api/repos/index`)**: The backend clones a public GitHub repository, traverses its file structure, and chunks the source code using LangChain methodologies. Vector embeddings are generated using Gemini and subsequently upserted into a Pinecone index under a repository-specific namespace.
+1. **Repository Ingestion (`/api/repos/index`)**: The backend clones a public GitHub repository, traverses its file structure, and chunks the source code using LangChain methodologies. Vector embeddings are generated using Gemini and subsequently upserted into a Pinecone index under a repository-specific namespace, while the repository metadata is stored in MongoDB Atlas.
 2. **File Browsing & State (`/api/files`)**: Offers an endpoint to fetch the current repository file tree and fetch real-time raw file contents directly from GitHub using a GitHub token to avoid persistent extensive file storage.
 3. **Retrieval-Augmented Generation (`/api/chat/*`)**: Retrieves relevant, semantically similar code snippets from Pinecone based on user queries or file paths, and provides this context to the Gemini LLM to generate precise, context-aware answers or extensive formatted documentation.
 
@@ -48,6 +48,7 @@ GitHub Code Analyzer is a robust backend service designed to index public GitHub
 
 ### 📋 Prerequisites
 - [Node.js](https://nodejs.org/) (v20+ recommended)
+- A [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) Account and Cluster
 - A [Pinecone](https://pinecone.io/) Account and Index
 - A [Google Gemini API Key](https://aistudio.google.com/)
 - A [GitHub Personal Access Token](https://github.com/settings/tokens) (Optional but strictly recommended for API rate limiting)
