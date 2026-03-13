@@ -107,6 +107,21 @@ export default function Hero() {
 
             {/* Previously indexed repos */}
             <PrevRepos />
+            {/* Scroll indicator */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.6 }}
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+            >
+                <motion.div
+                    animate={{ y: [0, 6, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                    className="w-5 h-8 rounded-full border border-text-muted/30 flex items-start justify-center pt-1.5"
+                >
+                    <div className="w-1 h-1.5 rounded-full bg-solar-orange" style={{ boxShadow: '0 0 6px #F97316' }} />
+                </motion.div>
+            </motion.div>
         </section>
     );
 }
