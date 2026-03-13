@@ -74,6 +74,15 @@ export async function namespaceExists(namespace: string): Promise<boolean> {
 // ─── Delete namespace ─────────────────────────────────────────────────────────
 
 export async function deleteNamespace(namespace: string): Promise<void> {
-    await index.namespace(namespace).deleteAll();
-    console.log(`[pinecone] deleted namespace "${namespace}"`);
+    try {
+        await index.namespace(namespace).deleteAll();
+        console.log(`[pinecone] deleted namespace "${namespace}"`);
+    } catch (err: any) {
+        // 404 means namespace doesn't exist — that's fine, continue
+        if (err?.status === 404 || err?.message?.includes('404')) {
+            console.log(`[pinecone] namespace "${namespace}" not found, skipping delete`);
+        } else {
+            throw err;
+        }
+    }
 }
