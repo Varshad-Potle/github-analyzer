@@ -28,6 +28,8 @@ export default function ChatPanel({
     const [genReadme, setGenReadme] = useState(false);
     const bottomRef = useRef<HTMLDivElement>(null);
 
+    const abortRef = useRef<AbortController | null>(null);
+
     // Scroll to bottom on new message
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -43,27 +45,43 @@ export default function ChatPanel({
         const question = input.trim();
         if (!question || loading) return;
 
+        const controller = new AbortController();
+        abortRef.current = controller;
+
         setMessages(prev => [...prev, { role: 'user', content: question }]);
         setInput('');
         setLoading(true);
 
         try {
-            const res = await api.post('/api/chat/query', { question, repoUrl });
+            const res = await api.post('/api/chat/query', { question, repoUrl }, {
+                signal: controller.signal,
+            });
             setMessages(prev => [...prev, {
                 role: 'assistant',
                 content: res.data.answer,
                 sources: res.data.sources,
             }]);
-        } catch {
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                content: 'Something went wrong. Please try again.',
-            }]);
+        } catch (err: any) {
+            if (err.code === 'ERR_CANCELED') {
+                setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: 'Response cancelled.',
+                }]);
+            } else {
+                setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: 'Something went wrong. Please try again.',
+                }]);
+            }
         } finally {
             setLoading(false);
+            abortRef.current = null;
         }
     };
 
+    const stopResponse = () => {
+        abortRef.current?.abort();
+    };
     const handleGenerateReadme = async () => {
         setGenReadme(true);
         try {
@@ -140,11 +158,17 @@ export default function ChatPanel({
 
                 {/* Typing indicator */}
                 {loading && (
-                    <div className="flex items-start">
-                        <div className="bg-surface-raised rounded-lg px-3 py-2 flex gap-1 items-center">
+                    <div className="flex items-start gap-2">
+                        <div className="bg-surface-raised rounded-lg px-3 py-2 flex items-center gap-3 border border-surface-raised">
                             <span className="w-1.5 h-1.5 rounded-full bg-solar-orange animate-bounce" style={{ animationDelay: '0ms' }} />
                             <span className="w-1.5 h-1.5 rounded-full bg-solar-orange animate-bounce" style={{ animationDelay: '150ms' }} />
                             <span className="w-1.5 h-1.5 rounded-full bg-solar-orange animate-bounce" style={{ animationDelay: '300ms' }} />
+                            <button
+                                onClick={stopResponse}
+                                className="ml-1 text-xs font-exo text-red-400 hover:text-red-300 border border-red-400/30 hover:border-red-300/50 px-2 py-0.5 rounded transition-colors"
+                            >
+                                Stop
+                            </button>
                         </div>
                     </div>
                 )}
