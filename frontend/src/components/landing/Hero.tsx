@@ -77,8 +77,24 @@ export default function Hero() {
                         onChange={e => { setRepoUrl(e.target.value); setError(''); }}
                         onKeyDown={handleKey}
                         placeholder="https://github.com/user/repo"
-                        className="flex-1 bg-surface border border-surface-raised rounded-xl px-5 py-3.5 font-mono text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-solar-orange/60 transition-colors"
+                        className="flex-1 bg-surface border border-surface-raised rounded-xl px-5 py-3.5 font-mono text-sm text-text-primary placeholder-text-muted focus:outline-none transition-all"
                         style={{ boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3)' }}
+                        onMouseEnter={e => {
+                            (e.currentTarget as HTMLInputElement).style.borderColor = 'rgba(249,115,22,0.6)';
+                            (e.currentTarget as HTMLInputElement).style.boxShadow = 'inset 0 0 20px rgba(0,0,0,0.3), 0 0 20px rgba(249,115,22,0.3)';
+                        }}
+                        onMouseLeave={e => {
+                            (e.currentTarget as HTMLInputElement).style.borderColor = '';
+                            (e.currentTarget as HTMLInputElement).style.boxShadow = 'inset 0 0 20px rgba(0,0,0,0.3)';
+                        }}
+                        onFocus={e => {
+                            (e.currentTarget as HTMLInputElement).style.borderColor = 'rgba(249,115,22,0.8)';
+                            (e.currentTarget as HTMLInputElement).style.boxShadow = 'inset 0 0 20px rgba(0,0,0,0.3), 0 0 30px rgba(249,115,22,0.5)';
+                        }}
+                        onBlur={e => {
+                            (e.currentTarget as HTMLInputElement).style.borderColor = '';
+                            (e.currentTarget as HTMLInputElement).style.boxShadow = 'inset 0 0 20px rgba(0,0,0,0.3)';
+                        }}
                     />
                     <button
                         onClick={handleSubmit}

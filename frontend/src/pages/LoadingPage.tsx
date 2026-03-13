@@ -68,7 +68,16 @@ export default function LoadingPage() {
                 if (err.code === 'ERR_CANCELED') {
                     setCancelled(true);
                 } else {
-                    setError(err.response?.data?.error || 'Something went wrong. Please try again.');
+                    const msg = err.response?.data?.error || '';
+                    const isRateLimit = msg.toLowerCase().includes('429') ||
+                        msg.toLowerCase().includes('quota') ||
+                        msg.toLowerCase().includes('rate') ||
+                        msg.toLowerCase().includes('too many');
+                    if (isRateLimit) {
+                        setError('API rate limit exceeded. The repo may be too large for our free-tier embedding quota. Try a smaller repo or wait a few minutes before retrying.');
+                    } else {
+                        setError(msg || 'Something went wrong. Please try again.');
+                    }
                 }
             });
 
