@@ -36,7 +36,9 @@ export default function TeamSection() {
             if (!section) return;
 
             const rect = section.getBoundingClientRect();
-            if (rect.top > 10 || rect.bottom < window.innerHeight - 10) return;
+            const center = rect.top + rect.height / 2;
+            const viewCenter = window.innerHeight / 2;
+            if (Math.abs(center - viewCenter) > window.innerHeight / 2) return;
 
             if (active >= TEAM.length - 1 && e.deltaY > 0) return;
             if (active <= 0 && e.deltaY < 0) return;
@@ -46,7 +48,7 @@ export default function TeamSection() {
 
             accumRef.current += e.deltaY;
 
-            const threshold = 200;
+            const threshold = 300;
             if (accumRef.current > threshold) {
                 accumRef.current = 0;
                 const next = Math.min(active + 1, TEAM.length - 1);

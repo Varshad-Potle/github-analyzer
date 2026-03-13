@@ -49,7 +49,7 @@ export default function StepsSection() {
 
             accumRef.current += e.deltaY;
 
-            const threshold = 120;
+            const threshold = 300;
             if (accumRef.current > threshold) {
                 accumRef.current = 0;
                 const next = Math.min(active + 1, STEPS.length - 1);

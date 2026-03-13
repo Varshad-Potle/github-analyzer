@@ -2,6 +2,7 @@ import ParticlesBg from '../components/landing/ParticlesBg';
 import Hero from '../components/landing/Hero';
 import StepsSection from '../components/landing/StepsSection';
 import TeamSection from '../components/landing/TeamSection';
+import Footer from '../components/landing/Footer';
 
 export default function LandingPage() {
     return (
@@ -10,6 +11,7 @@ export default function LandingPage() {
             <Hero />
             <StepsSection />
             <TeamSection />
+            <Footer />
         </div>
     );
 }
