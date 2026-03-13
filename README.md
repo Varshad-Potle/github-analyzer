@@ -12,7 +12,7 @@ GitHub Code Analyzer is a full-stack application that lets you **index any publi
 
 | Service  | URL                                                                                                  |
 | -------- | ---------------------------------------------------------------------------------------------------- |
-| Frontend | [github-analyzer.vercel.app](https://github-analyzer.vercel.app)                                     |
+| Frontend | [github-analyzer-done.vercel.app](https://github-analyzer-done.vercel.app)                                     |
 | Backend  | [github-analyzer-f6do.onrender.com](https://github-analyzer-f6do.onrender.com)                       |
 | Health   | [/health](https://github-analyzer-f6do.onrender.com/health)                                          |
 
