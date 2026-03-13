@@ -106,7 +106,7 @@ export default function LoadingPage() {
         let stars: Star[] = [];
 
         const generateStars = () => {
-            stars = Array.from({ length: 160 }, () => ({
+            stars = Array.from({ length: 250 }, () => ({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 r: Math.random() * 1.2 + 0.3,

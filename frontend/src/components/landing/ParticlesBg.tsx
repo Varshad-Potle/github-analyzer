@@ -25,7 +25,7 @@ export default function ParticlesBg() {
         const resize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            stars = Array.from({ length: 180 }, () => ({
+            stars = Array.from({ length: 250 }, () => ({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 r: Math.random() * 1.3 + 0.2,
