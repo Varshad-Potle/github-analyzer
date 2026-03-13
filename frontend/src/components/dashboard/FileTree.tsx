@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-    FiFolder, FiFile, FiCode, FiLoader,
+    FiFolder, FiCode, FiLoader,
 } from 'react-icons/fi';
 import {
     SiTypescript, SiJavascript, SiPython, SiGo,
